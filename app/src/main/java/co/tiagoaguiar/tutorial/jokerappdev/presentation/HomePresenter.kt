@@ -1,13 +1,19 @@
 package co.tiagoaguiar.tutorial.jokerappdev.presentation
 
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import co.tiagoaguiar.tutorial.jokerappdev.data.CategoryRemoteDataSource
+import co.tiagoaguiar.tutorial.jokerappdev.data.ListCategoryCallback
 import co.tiagoaguiar.tutorial.jokerappdev.model.Category
 import co.tiagoaguiar.tutorial.jokerappdev.view.CategoryItem
 import co.tiagoaguiar.tutorial.jokerappdev.view.HomeFragment
 
-class HomePresenter (private val view : HomeFragment){
+class HomePresenter (
+    private val view : HomeFragment,
+    private val dataSource: CategoryRemoteDataSource = CategoryRemoteDataSource()
+    ): ListCategoryCallback{
 
     //CONECOES ENTRE AS CAMADAS
     //VIEW <- PRESENTER
@@ -15,41 +21,35 @@ class HomePresenter (private val view : HomeFragment){
 
     fun findAllCategories(){
         view.showProgress()
-        fakeRequest()
+        dataSource.findAllCategories(this)
+
     }
 
-    fun onSuccess(response: List<String>){
+   override fun onSuccess(response: List<String>){
+        val start = 40
+        val end = 190
+       val diff = (end - start) / response.size
 
-       val categories = response.map{ Category(it, 0xFFFF0000)
+       val categories = response.mapIndexed{ index, s ->
+           val hsv = floatArrayOf(
+              start +  (diff * index).toFloat(),
+               100.0f,
+               100.0f,
+           )
+
+           Category(s, Color.HSVToColor(hsv).toLong())
        }
        view.showCategories(categories)
 
     }
-    fun onError( message: String){
-            view.showFailure(message)
+   override fun onError( response: String){
+            view.showFailure(response)
     }
 
-    fun onComplete(){
+    override fun onComplete(){
         view.hideProgress()
     }
 
-        //SIMULA UM AREQUISIÇÃO HTTTP
-    private fun fakeRequest(){
-        Handler(Looper.getMainLooper()).postDelayed({
-               val response = arrayListOf(
-                      "Categoria 1",
-                      "Categoria 2",
-                      "Categoria 3",
-                      "Categoria 4"
 
-                   )
-            // aqui a lista ja esta pronta(é o response)
-
-            //devolve sucesso ou falha
-             onSuccess(response)
-            // onError("FALHA NA CONEXÃO. TENTE NOVAMENTE MAIS TARDE!")
-            onComplete()
-        }, 4000)
-    }
 
 }

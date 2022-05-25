@@ -1,17 +1,16 @@
-package co.tiagoaguiar.tutorial.jokerappdev
+package co.tiagoaguiar.tutorial.jokerappdev.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import co.tiagoaguiar.tutorial.jokerappdev.R
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     appBarConfiguration = AppBarConfiguration(
       setOf(
-        R.id.nav_home, R.id.nav_joke_day, R.id.nav_about
+          R.id.nav_home, R.id.nav_joke_day, R.id.nav_about
       ), drawerLayout
     );
 
